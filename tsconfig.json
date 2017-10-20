@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "module": "umd",
+        "moduleResolution": "node",
+        "declaration": false,
+        "noImplicitAny": false,
+        "sourceMap": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "outDir": "./tmp",
+        "rootDir": ".",
+        "skipLibCheck": true,
+        "noUnusedLocals": true,
+        "typeRoots": ["./node_modules/@types"],
+        "types": [
+            "node",
+            "joi"
+        ],
+        "lib": [
+            "dom",
+            "es2017"
+        ]
+    },
+    "engines": {
+        "node": ">=8.0.0"
+    },
+    "compileOnSave": false,
+    "buildOnSave": false,
+    "exclude": [
+        "node_modules",
+        "dist",
+        "tmp",
+        "dev"
+    ]
+}
