@@ -1,17 +1,20 @@
-import { Entity } from './decorators';
+import { Entity } from './entity';
+import { Type, Required } from './decorators'
+import { TypeEnum } from './enums'
 
-@Entity
-export class Test {
+class Test extends Entity  {
 
+    @Type(TypeEnum.Hex)
+    @Required()
     id: string;
+
+    @Type(String)
+    name: string
+
 }
 
-// const t = new Test();
-// console.log(t)
+const t = new Test({ name: 1 });
 
+// t.name = 'HELLO';
 
-const tt = [null];
-
-const f = tt!.concat(1);
-
-console.log(f);
+console.log(t)
