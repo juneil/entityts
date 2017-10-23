@@ -1,12 +1,12 @@
 export enum ModeEnum {
-    READ,
-    CREATE,
-    UPDATE
+    READ            = <any>Symbol('mode_read'),
+    CREATE          = <any>Symbol('mode_create'),
+    UPDATE          = <any>Symbol('mode_update')
 }
 
 export enum TypeEnum {
-    Any,
-    ObjectId,
-    Hex,
-    Base64
+    Any             = <any>Symbol('type_any'),
+    ObjectId        = <any>Symbol('type_objectid'),
+    Hex             = <any>Symbol('type_hex'),
+    Base64          = <any>Symbol('type_base64')
 }

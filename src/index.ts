@@ -1,11 +1,15 @@
 import { Entity } from './entity';
-import { Type, Required } from './decorators'
-import { TypeEnum } from './enums'
+import { Type, Required, Strip } from './decorators';
 
-class Test extends Entity  {
+import * as Joi from 'joi';
 
-    @Type(TypeEnum.Hex)
-    @Required()
+// import { KEY_PROPS } from './symbols';
+
+class User extends Entity  {
+
+    @Type(String)
+    @Required(Entity.Mode.READ)
+    @Strip([ Entity.Mode.CREATE, Entity.Mode.UPDATE ])
     id: string;
 
     @Type(String)
@@ -13,8 +17,17 @@ class Test extends Entity  {
 
 }
 
-const t = new Test({ name: 1 });
+// const t = new Test();
 
-// t.name = 'HELLO';
+// console.log(User.schema());
 
-console.log(t)
+const t = new User({ name: 'ddd', '__v': 'ddd' });
+
+//User.isValidate(Entity.Mode.CREATE);
+
+console.log(Joi.validate(t, User.schema()))
+console.log('===============');
+console.log(Joi.validate(t, User.schema(Entity.Mode.UPDATE)))
+
+console.log(t.isValid());
+console.log(t.isValid(Entity.Mode.UPDATE));

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { KEY_PROPS, KEY_TYPE, KEY_REQUIRED } from './symbols';
-import { TypeEnum } from './enums';
+import { KEY_PROPS, KEY_TYPE, KEY_REQUIRED, KEY_STRIP } from './symbols';
+import { TypeEnum, ModeEnum } from './enums';
 
 type PropertyType = String | Number | Object | Boolean | Buffer | TypeEnum;
 type DecoratorFunc = (target: Object, propertyName: string) => void;
@@ -10,7 +10,7 @@ export interface PropertyMetadata {
     rules: [ PropertyRule ];
 }
 
-interface PropertyRule {
+export interface PropertyRule {
     key: symbol;
     value: any;
 }
@@ -20,10 +20,10 @@ interface PropertyRule {
  * Determine the property type
  * for validation
  *
- * @param  {PropertyType|Array<PropertyType>} type
+ * @param  {PropertyType|PropertyType[]} type
  * @returns DecoratorFunc
  */
-export function Type(type: PropertyType | Array<PropertyType>): DecoratorFunc {
+export function Type(type: PropertyType | PropertyType[]): DecoratorFunc {
     return function (target: Object, propertyName: string) {
         insertRule(target.constructor, propertyName, {
             key: KEY_TYPE,
@@ -36,13 +36,31 @@ export function Type(type: PropertyType | Array<PropertyType>): DecoratorFunc {
  * Decorator @Required()
  * Set the requirement of the property
  *
+ * @param  {ModeEnum|ModeEnum[]} mode
  * @returns DecoratorFunc
  */
-export function Required(): DecoratorFunc {
+export function Required(mode?: ModeEnum | ModeEnum[]): DecoratorFunc {
     return function (target: Object, propertyName: string) {
         insertRule(target.constructor, propertyName, {
             key: KEY_REQUIRED,
-            value: null
+            value: mode
+        })
+    }
+}
+
+/**
+ * Decorator @Strip()
+ * Determine if the property
+ * should be removed
+ *
+ * @param  {ModeEnum|ModeEnum[]} mode
+ * @returns DecoratorFunc
+ */
+export function Strip(mode?: ModeEnum | ModeEnum[]): DecoratorFunc {
+    return function (target: Object, propertyName: string) {
+        insertRule(target.constructor, propertyName, {
+            key: KEY_STRIP,
+            value: mode
         })
     }
 }
