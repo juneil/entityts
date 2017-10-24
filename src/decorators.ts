@@ -1,8 +1,11 @@
 import 'reflect-metadata';
-import { KEY_PROPS, KEY_TYPE, KEY_REQUIRED, KEY_STRIP } from './symbols';
 import { TypeEnum, ModeEnum } from './enums';
+import {
+    KEY_PROPS,
+    decorators
+} from './symbols';
 
-type PropertyType = String | Number | Object | Boolean | Buffer | TypeEnum;
+type PropertyType = String | Number | Date | Object | Boolean | Buffer | TypeEnum;
 type DecoratorFunc = (target: Object, propertyName: string) => void;
 
 export interface PropertyMetadata {
@@ -20,32 +23,22 @@ export interface PropertyRule {
  * Determine the property type
  * for validation
  *
- * @param  {PropertyType|PropertyType[]} type
+ * @param  {PropertyType} type
  * @returns DecoratorFunc
  */
-export function Type(type: PropertyType | PropertyType[]): DecoratorFunc {
-    return function (target: Object, propertyName: string) {
-        insertRule(target.constructor, propertyName, {
-            key: KEY_TYPE,
-            value: type
-        })
-    }
+export function Type(type: PropertyType): DecoratorFunc {
+    return insertRule({ key: decorators.KEY_TYPE, value: type });
 }
 
 /**
  * Decorator @Required()
  * Set the requirement of the property
  *
- * @param  {ModeEnum|ModeEnum[]} mode
+ * @param  {ModeEnum[]} mode
  * @returns DecoratorFunc
  */
-export function Required(mode?: ModeEnum | ModeEnum[]): DecoratorFunc {
-    return function (target: Object, propertyName: string) {
-        insertRule(target.constructor, propertyName, {
-            key: KEY_REQUIRED,
-            value: mode
-        })
-    }
+export function Required(...mode: ModeEnum[]): DecoratorFunc {
+    return insertRule({ key: decorators.KEY_REQUIRED, value: mode });
 }
 
 /**
@@ -53,16 +46,58 @@ export function Required(mode?: ModeEnum | ModeEnum[]): DecoratorFunc {
  * Determine if the property
  * should be removed
  *
- * @param  {ModeEnum|ModeEnum[]} mode
+ * @param  {ModeEnum[]} mode
  * @returns DecoratorFunc
  */
-export function Strip(mode?: ModeEnum | ModeEnum[]): DecoratorFunc {
-    return function (target: Object, propertyName: string) {
-        insertRule(target.constructor, propertyName, {
-            key: KEY_STRIP,
-            value: mode
-        })
-    }
+export function Strip(...mode: ModeEnum[]): DecoratorFunc {
+    return insertRule({ key: decorators.KEY_STRIP, value: mode });
+}
+
+/**
+ * Decorator @Valid()
+ * Determine the values
+ * allowed
+ *
+ * @param  {any[]} value
+ * @returns DecoratorFunc
+ */
+export function Valid(...value: any[]): DecoratorFunc {
+    return insertRule({ key: decorators.KEY_VALID, value });
+}
+
+/**
+ * Decorator @Invalid()
+ * Determine the values
+ * only allowed
+ *
+ * @param  {any[]} value
+ * @returns DecoratorFunc
+ */
+export function Invalid(...value: any[]): DecoratorFunc {
+    return insertRule({ key: decorators.KEY_INVALID, value });
+}
+
+/**
+ * Decorator @Allow()
+ * Determine the values
+ * allowed
+ *
+ * @param  {any[]} value
+ * @returns DecoratorFunc
+ */
+export function Allow(...value: any[]): DecoratorFunc {
+    return insertRule({ key: decorators.KEY_ALLOW, value });
+}
+
+/**
+ * Decorator @Description()
+ * Describe the property
+ *
+ * @param  {string} description
+ * @returns DecoratorFunc
+ */
+export function Description(description: string): DecoratorFunc {
+    return insertRule({ key: decorators.KEY_DESCRIPTION, value: description });
 }
 
 /**
@@ -74,17 +109,19 @@ export function Strip(mode?: ModeEnum | ModeEnum[]): DecoratorFunc {
  * @param  {PropertyRule} rule
  * @returns void
  */
-function insertRule(target: Function, propertyName: string, rule: PropertyRule): void {
-    Reflect
-        .defineMetadata(
-            KEY_PROPS,
-            getPropertiesWithInit(target, propertyName)
-                .map(_ => ({
-                    property: _.property,
-                    rules: _.property === propertyName ? _.rules.concat(rule) : _.rules
-                })),
-            target
-        );
+function insertRule(rule: PropertyRule): DecoratorFunc {
+    return function (target: Object, propertyName: string) {
+        Reflect
+            .defineMetadata(
+                KEY_PROPS,
+                getPropertiesWithInit(target.constructor, propertyName)
+                    .map(_ => ({
+                        property: _.property,
+                        rules: _.property === propertyName ? _.rules.concat(rule) : _.rules
+                    })),
+                target.constructor
+            );
+    };
 }
 
 /**
