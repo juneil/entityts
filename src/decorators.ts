@@ -1,9 +1,7 @@
 import 'reflect-metadata';
 import { TypeEnum, ModeEnum } from './enums';
-import {
-    KEY_PROPS,
-    decorators
-} from './symbols';
+import { KEY_PROPS, decorators } from './symbols';
+import { BaseEntity } from './entity';
 
 type PropertyType = String | Number | Date | Object | Boolean | Buffer | TypeEnum;
 type DecoratorFunc = (target: Object, propertyName: string) => void;
@@ -38,6 +36,7 @@ export function Type(type: PropertyType): DecoratorFunc {
  * @returns DecoratorFunc
  */
 export function Required(...mode: ModeEnum[]): DecoratorFunc {
+    mode = !mode.length ? [ ModeEnum.READ ] : mode;
     return insertRule({ key: decorators.KEY_REQUIRED, value: mode });
 }
 
@@ -50,6 +49,7 @@ export function Required(...mode: ModeEnum[]): DecoratorFunc {
  * @returns DecoratorFunc
  */
 export function Strip(...mode: ModeEnum[]): DecoratorFunc {
+    mode = !mode.length ? [ ModeEnum.READ ] : mode;
     return insertRule({ key: decorators.KEY_STRIP, value: mode });
 }
 
@@ -101,6 +101,39 @@ export function Description(description: string): DecoratorFunc {
 }
 
 /**
+ * Decorator @Min()
+ * Set a min validation
+ *
+ * @param  {number} value
+ * @returns DecoratorFunc
+ */
+export function Min(value: number): DecoratorFunc {
+    return insertRule({ key: decorators.KEY_MIN, value });
+}
+
+/**
+ * Decorator @Max()
+ * Set a max validation
+ *
+ * @param  {number} value
+ * @returns DecoratorFunc
+ */
+export function Max(value: number): DecoratorFunc {
+    return insertRule({ key: decorators.KEY_MAX, value });
+}
+
+/**
+ * Decorator @Length()
+ * Set a length validation
+ *
+ * @param  {number} value
+ * @returns DecoratorFunc
+ */
+export function Length(value: number): DecoratorFunc {
+    return insertRule({ key: decorators.KEY_LENGTH, value });
+}
+
+/**
  * Insert a new rule of a property
  * in the metadata of the Entity
  *
@@ -111,6 +144,9 @@ export function Description(description: string): DecoratorFunc {
  */
 function insertRule(rule: PropertyRule): DecoratorFunc {
     return function (target: Object, propertyName: string) {
+        if (!(target instanceof BaseEntity)) {
+            return;
+        }
         Reflect
             .defineMetadata(
                 KEY_PROPS,

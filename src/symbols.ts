@@ -1,6 +1,6 @@
 
 // Key linked to the Metadata Properties
-export const KEY_PROPS     = Symbol('key_props');
+export const KEY_PROPS = Symbol('key_props');
 
 export const decorators = {
     // Key of @Type()
@@ -22,5 +22,14 @@ export const decorators = {
     KEY_ALLOW       : Symbol('key_allow'),
 
     // Key of @Description()
-    KEY_DESCRIPTION : Symbol('key_decription')
+    KEY_DESCRIPTION : Symbol('key_decription'),
+
+    // Key of @Min()
+    KEY_MIN         : Symbol('key_min'),
+
+    // Key of @Max()
+    KEY_MAX         : Symbol('key_max'),
+
+    // Key of @Length()
+    KEY_LENGTH      : Symbol('key_length')
 }
