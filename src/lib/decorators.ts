@@ -3,8 +3,8 @@ import { TypeEnum, ModeEnum } from './enums';
 import { KEY_PROPS, decorators } from './symbols';
 import { BaseEntity } from './entity';
 
-type PropertyType = String | Number | Date | Object | Boolean | Buffer | TypeEnum;
-type DecoratorFunc = (target: Object, propertyName: string) => void;
+export type PropertyType = String | Number | Date | Object | Boolean | Buffer | TypeEnum;
+export type DecoratorFunc = (target: Object, propertyName: string) => void;
 
 export interface PropertyMetadata {
     property: string;

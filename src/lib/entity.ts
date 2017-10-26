@@ -1,7 +1,7 @@
 import { PropertyMetadata } from './decorators';
 import { KEY_PROPS } from './symbols';
 import { ModeEnum, TypeEnum } from './enums';
-import { JoiTransformer } from './transformers/joi.transformer';
+import { JoiTransformer } from '../transformers/joi.transformer';
 
 
 export interface EntityTransformer<T> {
@@ -76,7 +76,7 @@ export class BaseEntity {
     }
 }
 
-type Constructor<T> = new(...args: any[]) => T;
+export type Constructor<T> = new(...args: any[]) => T;
 
 /**
  * Mixin to link Tranformers
@@ -85,7 +85,7 @@ type Constructor<T> = new(...args: any[]) => T;
  */
 export function EntityTo(...transformers: Constructor<Object>[]) {
     return class extends BaseEntity {
-        protected static transformers = <EntityTransformer<any>[]>transformers.map(Transformer => new Transformer());
+        static transformers = <EntityTransformer<any>[]>transformers.map(Transformer => new Transformer());
     }
 }
 

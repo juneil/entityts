@@ -1,7 +1,7 @@
 import { suite, test } from 'mocha-typescript';
 import * as unit from 'unit.js';
 
-import { KEY_PROPS, decorators } from '../../src/symbols';
+import { KEY_PROPS, decorators } from '../../src/lib/symbols';
 import { Entity, Type, Required, Strip, Valid, Invalid, Allow, Description, Min, Max, Length } from '../../src';
 
 @suite('Decorators')

@@ -1,7 +1,7 @@
 import { suite, test } from 'mocha-typescript';
 import * as unit from 'unit.js';
 import * as Joi from 'joi';
-import { BaseEntity } from '../../src/entity';
+import { BaseEntity } from '../../src/lib/entity';
 import { Entity, EntityTo, JoiTransformer,
     Type, Required, Strip, Valid, Invalid, Allow, Description, Min, Max, Length } from '../../src';
 

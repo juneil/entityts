@@ -1,7 +1,7 @@
 import { suite, test } from 'mocha-typescript';
 import * as unit from 'unit.js';
 
-import { BaseEntity, EntityRef } from '../../src/entity';
+import { BaseEntity, EntityRef } from '../../src/lib/entity';
 import { Entity, EntityTo, Type, JoiTransformer } from '../../src';
 
 @suite('Entity')

@@ -1,8 +1,8 @@
 import * as Joi from 'joi';
-import { PropertyMetadata, PropertyRule } from '../decorators';
-import { ModeEnum, TypeEnum } from '../enums';
-import { BaseEntity, EntityRef, EntityTransformer } from '../entity';
-import { decorators } from '../symbols';
+import { PropertyMetadata, PropertyRule } from '../lib/decorators';
+import { ModeEnum, TypeEnum } from '../lib/enums';
+import { BaseEntity, EntityRef, EntityTransformer } from '../lib/entity';
+import { decorators } from '../lib/symbols';
 
 interface PropertySchema {
     property: string;
