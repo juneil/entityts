@@ -1,3 +1,4 @@
 instrumentation:
   extensions:
     - .ts
+  root: src

@@ -16,7 +16,7 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
 
     private objectIdRegex = /^[0-9a-fA-F]{24}$/;
 
-    build(source: PropertyMetadata[], mode: ModeEnum = ModeEnum.READ): Joi.ObjectSchema {
+    build(source: PropertyMetadata[], mode: ModeEnum): Joi.ObjectSchema {
         return !source ? undefined : this.reduceSchema(source.map(_ => this.propertyHandler(_, mode)));
     }
 
@@ -103,6 +103,7 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
                 return this.maxMapper(rule, base);
             case decorators.KEY_LENGTH:
                 return this.lengthMapper(rule, base);
+            /* istanbul ignore next */
             default:
                 return Joi.any();
         }
@@ -128,6 +129,8 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
                 return Joi.binary();
             case Date:
                 return Joi.date();
+            case Array:
+                return Joi.array();
             case TypeEnum.Hex:
                 return Joi.string().hex();
             case TypeEnum.Base64:
@@ -136,6 +139,7 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
                 return Joi.string().isoDate();
             case TypeEnum.ObjectId:
                 return Joi.string().regex(this.objectIdRegex);
+            /* istanbul ignore next */
             default:
                 return Joi.any();
         }

@@ -1,7 +1,7 @@
 import { PropertyMetadata } from './decorators';
 import { KEY_PROPS } from './symbols';
 import { ModeEnum, TypeEnum } from './enums';
-import { JoiTransformer } from './transformers/joi.transformer';
+import { JoiTransformer, SchemaType } from './transformers/joi.transformer';
 
 
 export interface EntityTransformer<T> {
@@ -37,16 +37,37 @@ export class BaseEntity {
             .forEach((_: PropertyMetadata) => Reflect.set(this, _.property, payload[_.property] || undefined))
     }
 
+    /**
+     * Get schema
+     * @todo Implement the transformers system
+     * @param  {ModeEnum=ModeEnum.READ} mode
+     * @returns T
+     */
     static schema<T>(mode: ModeEnum = ModeEnum.READ): T {
+        if (!(this.transformers && this.transformers.length > 0)) {
+            return;
+        }
         return this
             .transformers[0]
             .build(Reflect.getMetadata(KEY_PROPS, this), mode);
     }
 
+    /**
+     * Do a reference to another property
+     *
+     * @param  {string} ref
+     * @returns EntityRef
+     */
     static ref(ref: string): EntityRef {
         return new EntityRef(ref);
     }
 
+    /**
+     * Check if the entity instance is valid
+     *
+     * @param  {ModeEnum=ModeEnum.READ} mode
+     * @returns boolean
+     */
     isValid(mode: ModeEnum = ModeEnum.READ): boolean {
         return this
             .constructor
