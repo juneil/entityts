@@ -23,7 +23,7 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
     isValid(data: BaseEntity, schema: Joi.ObjectSchema): boolean {
         return !!data && !Joi.validate(data, schema).error;
     }
-    
+
     /**
      * Merge all rules and
      * reduce to an Object Schema

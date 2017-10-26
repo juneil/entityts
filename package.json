@@ -1,9 +1,10 @@
 {
-  "name": "ents",
+  "name": "entityts",
   "version": "1.0.0",
-  "description": "",
+  "description": "EntityTS - Typescript library for entities, create entities for validation",
   "main": "index.js",
   "scripts": {
+    "pretest": "tslint -p ./tsconfig.json --type-check \"./src/**/*.ts\" \"./test/**/*.ts\"",
     "test": "istanbul cover _mocha test/**/*.test.ts"
   },
   "author": "",

@@ -1,7 +1,7 @@
 import { PropertyMetadata } from './decorators';
 import { KEY_PROPS } from './symbols';
 import { ModeEnum, TypeEnum } from './enums';
-import { JoiTransformer, SchemaType } from './transformers/joi.transformer';
+import { JoiTransformer } from './transformers/joi.transformer';
 
 
 export interface EntityTransformer<T> {
@@ -22,20 +22,6 @@ export class BaseEntity {
     static Type = TypeEnum;
 
     protected static transformers: EntityTransformer<any>[];
-
-    /**
-     * Try to populate the Entity with
-     * a provided payload
-     * 
-     * @constructor
-     * @param  {} payload={}
-     */
-    constructor(payload = {}) {
-        []
-            .concat(Reflect.getOwnMetadata(KEY_PROPS, this.constructor))
-            .filter(_ => !!_)
-            .forEach((_: PropertyMetadata) => Reflect.set(this, _.property, payload[_.property] || undefined))
-    }
 
     /**
      * Get schema
@@ -63,6 +49,20 @@ export class BaseEntity {
     }
 
     /**
+     * Try to populate the Entity with
+     * a provided payload
+     *
+     * @constructor
+     * @param  {} payload={}
+     */
+    constructor(payload = {}) {
+        []
+            .concat(Reflect.getOwnMetadata(KEY_PROPS, this.constructor))
+            .filter(_ => !!_)
+            .forEach((_: PropertyMetadata) => Reflect.set(this, _.property, payload[_.property] || undefined))
+    }
+
+    /**
      * Check if the entity instance is valid
      *
      * @param  {ModeEnum=ModeEnum.READ} mode
@@ -74,7 +74,6 @@ export class BaseEntity {
             ['transformers'][0]
             .isValid(this, this.constructor['schema'](mode));
     }
-   
 }
 
 type Constructor<T> = new(...args: any[]) => T;

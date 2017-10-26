@@ -174,7 +174,7 @@ function getPropertiesWithInit(target: Function, propertyName: string): Property
         .concat(Reflect.getOwnMetadata(KEY_PROPS, target))
         .filter(_ => !!_);
     if (!props.find(_ => _.property === propertyName)) {
-        return props.concat(<PropertyMetadata>{ property: propertyName, rules: [] }) 
+        return props.concat(<PropertyMetadata>{ property: propertyName, rules: [] });
     }
     return props;
 }

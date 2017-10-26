@@ -1,11 +1,6 @@
 export { Entity, EntityTo, EntityRef } from './entity';
 export { Type, Required, Strip, Valid, Invalid, Allow, Description, Min, Max, Length } from './decorators';
-export { JoiTransformer } from './transformers'
-
-
-
-
-
+export { JoiTransformer } from './transformers';
 
 // import { Entity, EntityTo } from './entity';
 // import { Type, Required, Strip, Length, Min } from './decorators';
@@ -35,7 +30,7 @@ export { JoiTransformer } from './transformers'
 // }
 
 // export class Test extends EntityTo(JoiTransformer) {
-    
+
 //     @Type(String)
 //     @Length(10)
 //     name: string

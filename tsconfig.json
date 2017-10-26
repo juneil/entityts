@@ -11,7 +11,7 @@
         "outDir": "./tmp",
         "rootDir": ".",
         "skipLibCheck": true,
-        "noUnusedLocals": false,
+        "noUnusedLocals": true,
         "typeRoots": ["./node_modules/@types"],
         "types": [
             "node",

@@ -2,7 +2,6 @@ import { suite, test } from 'mocha-typescript';
 import * as unit from 'unit.js';
 
 import { KEY_PROPS, decorators } from '../../src/symbols';
-import { BaseEntity } from '../../src/entity';
 import { Entity, Type, Required, Strip, Valid, Invalid, Allow, Description, Min, Max, Length } from '../../src';
 
 @suite('Decorators')
