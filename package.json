@@ -1,5 +1,5 @@
 {
-  "name": "entityts",
+  "name": "@juneil/entityts",
   "version": "1.0.0-alpha.1",
   "description": "EntityTS - Typescript library for entities, create entities for validation",
   "main": "index.js",
@@ -11,7 +11,21 @@
     "postbuild": "cp ./README.md ./dist && cp ./package.json ./dist",
     "clear": "rm -rf ./dist"
   },
-  "author": "",
+  "author": "Juneil",
+  "homepage": "https://github.com/Juneil/entityts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Juneil/entityts.git"
+  },
+  "keywords": [
+      "entityts",
+      "entity",
+      "entities",
+      "typescript",
+      "decorator",
+      "node",
+      "nodejs"
+  ],
   "license": "ISC",
   "dependencies": {
     "joi": "^13.0.1",

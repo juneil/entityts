@@ -28,10 +28,10 @@ class User extends Entity {
 }
 
 const user1 = new User({ id: '1DB6A7FF08' });
-user.isValid() // true
+user1.isValid() // true
 
 const user2 = new User();
-user.isValid() // false
+user2.isValid() // false
 
 ```
 
