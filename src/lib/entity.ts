@@ -74,6 +74,15 @@ export class BaseEntity {
             ['transformers'][0]
             .isValid(this, this.constructor['schema'](mode));
     }
+
+    /**
+     * Get schema
+     *
+     * @param  {ModeEnum} mode
+     */
+    schema<T>(mode?: ModeEnum): T {
+        return this.constructor['schema'](mode);
+    }
 }
 
 export type Constructor<T> = new(...args: any[]) => T;

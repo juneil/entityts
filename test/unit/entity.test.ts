@@ -158,4 +158,21 @@ export class SuiteEntity {
             .is(undefined);
 
     }
+
+    @test('Entity - Equality')
+    test9() {
+
+        class MyTest9 extends Entity {
+
+            @Type(String)
+            id: string;
+
+        }
+
+        const instance = new MyTest9();
+        unit
+            .object(MyTest9.schema())
+            .is(instance.schema());
+
+    }
 }

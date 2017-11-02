@@ -42,6 +42,8 @@ user2.isValid() // false
 
 ### Instance methods
 
+- `schema(ModeEnum): Joi.Schema`
+    - Build and return the schema for a mode
 - `isValid(ModeEnum): boolean`
     - Based on the schema, valid the instance
 
@@ -137,4 +139,3 @@ Add description metadata to the property
 - `Entity.Mode.READ`: Default mode
 - `Entity.Mode.CREATE`: Mode to use while creating in a datasource
 - `Entity.Mode.UPDATE`: Mode to use while updating in a datasource
-
