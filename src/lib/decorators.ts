@@ -29,6 +29,18 @@ export function Type(type: PropertyType): DecoratorFunc {
 }
 
 /**
+ * Decorator @Array()
+ * Determine the property type
+ * for validation
+ *
+ * @param  {PropertyType} type
+ * @returns DecoratorFunc
+ */
+export function Array(type: PropertyType): DecoratorFunc {
+    return insertRule({ key: decorators.KEY_ARRAY, value: type });
+}
+
+/**
  * Decorator @Required()
  * Set the requirement of the property
  *
