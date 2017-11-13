@@ -141,7 +141,7 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
                 return Joi.string().regex(this.objectIdRegex);
             /* istanbul ignore next */
             default:
-                if (new rule.value() instanceof BaseEntity) {
+                if (!!rule.value.constructor && new rule.value() instanceof BaseEntity) {
                     return (<BaseEntity>rule.value).schema(mode);
                 }
                 return Joi.any();
