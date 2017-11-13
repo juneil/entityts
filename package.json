@@ -1,6 +1,6 @@
 {
   "name": "@juneil/entityts",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "EntityTS - Typescript library for entities, create entities for validation",
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,6 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "joi": "^13.0.1",
     "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {
@@ -41,5 +40,8 @@
     "tslint": "^5.8.0",
     "typescript": "^2.5.3",
     "unit.js": "^2.0.0"
+  },
+  "peerDependencies": {
+    "joi": "^13.0.1"
   }
 }
