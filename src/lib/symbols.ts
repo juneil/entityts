@@ -6,6 +6,9 @@ export const decorators = {
     // Key of @Type()
     KEY_TYPE        : Symbol('key_type'),
 
+    // Key of @Type()
+    KEY_ARRAY       : Symbol('key_array'),
+
     // Key of @Required()
     KEY_REQUIRED    : Symbol('key_required'),
 

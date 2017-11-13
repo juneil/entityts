@@ -51,9 +51,36 @@ user2.isValid() // false
 
 #### Type
 ```javascript
-@Type(String | Number | Date | Object | Boolean | Buffer | Array | TypeEnum)
+@Type(String | Number | Date | Object | Boolean | Buffer | TypeEnum | *Entity)
 ```
 Specify the type of the property's value and will be the base of the Schema
+
+*Entity: Allow you to have a property with the type of an Entity. Example:
+
+```javascript
+class Entity2 extends Entity {
+    @Required()
+    @Type(String)
+    id: string
+
+}
+class Entity1 extends Entity {
+    @Type(String)
+    id: string
+
+    @Type(Entity2)
+    sub: Entity2
+}
+new Entity1().isValid()                         // true
+new Entity1({ sub: {} }).isValid()              // false
+new Entity1({ sub: { id: 'abc' } }).isValid()   // true
+```
+
+#### Array
+```javascript
+@Array(String | Number | Date | Object | Boolean | Buffer | TypeEnum | *Entity)
+```
+Same as @Type() but with array.
 
 #### Required
 ```javascript

@@ -57,7 +57,7 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
     private propertyHandler(source: PropertyMetadata, mode: ModeEnum): PropertySchema {
         const base = source
             .rules
-            .filter(_ => _.key === decorators.KEY_TYPE)
+            .filter(_ => _.key === decorators.KEY_TYPE || _.key === decorators.KEY_ARRAY)
             .map(_ => this.ruleHandler(_, mode))
             .shift() || Joi.any();
         return {
@@ -65,7 +65,7 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
             base,
             schemas: source
                 .rules
-                .filter(_ => _.key !== decorators.KEY_TYPE)
+                .filter(_ => (_.key !== decorators.KEY_TYPE && _.key !== decorators.KEY_ARRAY))
                 .map(_ => this.ruleHandler(_, mode, base))
                 .filter(_ => !!_)
         }
@@ -84,7 +84,9 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
     private ruleHandler(rule: PropertyRule, mode: ModeEnum, base?: Joi.Schema): Joi.Schema {
         switch (rule.key) {
             case decorators.KEY_TYPE:
-                return this.typeMapper(rule);
+                return this.typeMapper(rule, mode);
+            case decorators.KEY_ARRAY:
+                return Joi.array().items(this.typeMapper(rule, mode));
             case decorators.KEY_REQUIRED:
                 return this.requireMapper(rule, mode);
             case decorators.KEY_STRIP:
@@ -115,7 +117,7 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
      * @param  {PropertyRule} rule
      * @returns Joi.Schema
      */
-    private typeMapper(rule: PropertyRule): Joi.Schema {
+    private typeMapper(rule: PropertyRule, mode: ModeEnum): Joi.Schema {
         switch (rule.value) {
             case String:
                 return Joi.string();
@@ -129,8 +131,6 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
                 return Joi.binary();
             case Date:
                 return Joi.date();
-            case Array:
-                return Joi.array();
             case TypeEnum.Hex:
                 return Joi.string().hex();
             case TypeEnum.Base64:
@@ -141,6 +141,9 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
                 return Joi.string().regex(this.objectIdRegex);
             /* istanbul ignore next */
             default:
+                if (new rule.value() instanceof BaseEntity) {
+                    return (<BaseEntity>rule.value).schema(mode);
+                }
                 return Joi.any();
         }
     }
