@@ -9,5 +9,7 @@ export enum TypeEnum {
     ObjectId        = <any>Symbol('type_objectid'),
     Hex             = <any>Symbol('type_hex'),
     Base64          = <any>Symbol('type_base64'),
-    IsoDate         = <any>Symbol('type_isodate')
+    IsoDate         = <any>Symbol('type_isodate'),
+    Integer         = <any>Symbol('type_integer'),
+    IP              = <any>Symbol('type_ip')
 }
