@@ -139,6 +139,10 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
                 return Joi.string().isoDate();
             case TypeEnum.ObjectId:
                 return Joi.string().regex(this.objectIdRegex);
+            case TypeEnum.Integer:
+                return Joi.number().integer();
+            case TypeEnum.IP:
+                return Joi.string().ip();
             /* istanbul ignore next */
             default:
                 if (!!rule.value.constructor && new rule.value() instanceof BaseEntity) {
