@@ -145,7 +145,7 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
                 return Joi.string().ip();
             /* istanbul ignore next */
             default:
-                if (!!rule.value.constructor && new rule.value() instanceof BaseEntity) {
+                if (typeof rule.value === 'function' && new rule.value() instanceof BaseEntity) {
                     return (<BaseEntity>rule.value).schema(mode);
                 }
                 return Joi.any();
