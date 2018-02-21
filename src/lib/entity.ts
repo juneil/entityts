@@ -96,6 +96,7 @@ export type Constructor<T> = new(...args: any[]) => T;
 export function EntityTo(...transformers: Constructor<Object>[]) {
     return class extends BaseEntity {
         static transformers = <EntityTransformer<any>[]>transformers.map(Transformer => new Transformer());
+        static more() {};
     }
 }
 
