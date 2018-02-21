@@ -11,5 +11,6 @@ export enum TypeEnum {
     Base64          = <any>Symbol('type_base64'),
     IsoDate         = <any>Symbol('type_isodate'),
     Integer         = <any>Symbol('type_integer'),
-    IP              = <any>Symbol('type_ip')
+    IP              = <any>Symbol('type_ip'),
+    URI             = <any>Symbol('type_uri')
 }

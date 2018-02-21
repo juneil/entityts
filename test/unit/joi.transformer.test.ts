@@ -3,7 +3,7 @@ import * as unit from 'unit.js';
 import * as Joi from 'joi';
 import { BaseEntity } from '../../src/lib/entity';
 import { Entity, EntityTo, JoiTransformer,
-    Type, Required, Strip, Valid, Invalid, Allow, Description, Min, Max, Length } from '../../src';
+    Type, Required, Strip, Valid, Invalid, Allow, Description, Min, Max, Length, ObjectPattern } from '../../src';
 
 @suite('JoiTransformer')
 export class SuiteJoi {
@@ -172,4 +172,64 @@ export class SuiteJoi {
             .isFalse();
 
     }
+
+    @test('ObjectPattern')
+    test5() {
+
+        class MyTest extends EntityTo(JoiTransformer) {
+
+            @ObjectPattern(/\w\d/, String)
+            name: {[key: string]: string};
+        }
+
+        const instance = new MyTest({ name: { test1: 'name1' }});
+
+        unit
+            .bool(instance.isValid())
+            .isTrue()
+
+        class MyTest2 extends EntityTo(JoiTransformer) {
+
+            @ObjectPattern(/\w\d/, Number)
+            name: {[key: string]: string};
+        }
+
+        const instance2 = new MyTest2({ name: { test1: 'name1' }});
+
+        unit
+            .bool(instance2.isValid())
+            .isFalse()
+
+    }
+
+
+    @test('More feature')
+    test6() {
+
+        class MyTest extends EntityTo(JoiTransformer) {
+
+            @ObjectPattern(/\w\d/, String)
+            name: {[key: string]: string};
+
+            static more(): Joi.ObjectSchema {
+                return Joi.object({
+                    name: Joi.object().required()
+                });
+            }
+        }
+
+        const instance = new MyTest({ name: { test1: 'name1' }});
+
+        unit
+            .bool(instance.isValid())
+            .isTrue();
+
+        const instance2 = new MyTest({});
+
+        unit
+            .bool(instance2.isValid())
+            .isFalse();
+
+    }
+
 }

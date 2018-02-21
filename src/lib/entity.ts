@@ -5,7 +5,7 @@ import { JoiTransformer } from '../transformers/joi.transformer';
 
 
 export interface EntityTransformer<T> {
-    build: (source: PropertyMetadata[], mode: ModeEnum) => T;
+    build: (source: PropertyMetadata[], mode: ModeEnum, more?: T) => T;
     isValid: (value: BaseEntity, schema: T) => boolean;
 }
 
@@ -22,6 +22,7 @@ export class BaseEntity {
     static Type = TypeEnum;
 
     protected static transformers: EntityTransformer<any>[];
+    protected static more() {}
 
     /**
      * Get schema
@@ -35,7 +36,7 @@ export class BaseEntity {
         }
         return this
             .transformers[0]
-            .build(Reflect.getMetadata(KEY_PROPS, this), mode);
+            .build(Reflect.getMetadata(KEY_PROPS, this), mode, this.more());
     }
 
     /**

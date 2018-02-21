@@ -34,5 +34,11 @@ export const decorators = {
     KEY_MAX         : Symbol('key_max'),
 
     // Key of @Length()
-    KEY_LENGTH      : Symbol('key_length')
+    KEY_LENGTH      : Symbol('key_length'),
+
+    // Key of @ObjectPattern()
+    KEY_OBJECT_PATTERN  : Symbol('key_object_pattern'),
+
+    // Key of @Unknown()
+    KEY_UNKNOWN  : Symbol('key_unknown')
 }

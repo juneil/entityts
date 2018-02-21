@@ -82,6 +82,12 @@ new Entity1({ sub: { id: 'abc' } }).isValid()   // true
 ```
 Same as @Type() but with array.
 
+#### ObjectPattern
+```javascript
+@ObjectPattern(RegExp, String | Number | Date | Object | Boolean | Buffer | TypeEnum | *Entity)
+```
+Allow to define the key's pattern and the value's type of an object
+
 #### Required
 ```javascript
 @Required(...ModeEnum) // By default: Entity.Mode.READ
@@ -153,6 +159,14 @@ Works with types: `String | Array | Buffer | TypeEnum`
 
 Add description metadata to the property
 
+#### Unknown
+
+```javascript
+@Unknown()
+```
+
+Allow unknown properties for object type
+
 ### TypeEnum
 
 - `Entity.Type.Any`: any
@@ -160,9 +174,28 @@ Add description metadata to the property
 - `Entity.Type.Hex`: String in hexadecimal format
 - `Entity.Type.Base64`: String in base64 format
 - `Entity.Type.IsoDate`: String in iso date format
+- `Entity.Type.URI`: String URI format
 
 ### ModeEnum
 
 - `Entity.Mode.READ`: Default mode
 - `Entity.Mode.CREATE`: Mode to use while creating in a datasource
 - `Entity.Mode.UPDATE`: Mode to use while updating in a datasource
+
+### More
+
+You can extend the schema with `more()' static methods
+
+```javascript
+class Entity1 extends Entity {
+    @Type(String)
+    id: string
+
+    // Make id required
+    static more() {
+        return Joi.object({
+            id: Joi.any.required()
+        });
+    }
+}
+```

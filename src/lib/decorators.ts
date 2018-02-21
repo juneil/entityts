@@ -146,6 +146,26 @@ export function Length(value: number): DecoratorFunc {
 }
 
 /**
+ * Decorator @ObjectPattern()
+ *
+ * @param  {RegExp} pattern
+ * @param  {PropertyType} schema
+ * @returns DecoratorFunc
+ */
+export function ObjectPattern(pattern: RegExp, schema: PropertyType): DecoratorFunc {
+    return insertRule({ key: decorators.KEY_OBJECT_PATTERN, value: { pattern, schema }});
+}
+
+/**
+ * Decorator @Unknown()
+ *
+ * @returns DecoratorFunc
+ */
+export function Unknown(): DecoratorFunc {
+    return insertRule({ key: decorators.KEY_UNKNOWN, value: null });
+}
+
+/**
  * Insert a new rule of a property
  * in the metadata of the Entity
  *
