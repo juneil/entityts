@@ -18,20 +18,20 @@ export class SuiteArray {
         }
 
         unit
-            .bool(new EntityTest().isValid())
+            .bool(new EntityTest({}, { strict: false }).isValid())
             .isFalse();
 
         unit
-            .bool(new EntityTest({ data: 'data' }).isValid())
+            .bool(new EntityTest({ data: 'data' }, { strict: false }).isValid())
             .isFalse();
 
         unit
-            .bool(new EntityTest({ data: [] }).isValid())
+            .bool(new EntityTest({ data: [] }, { strict: false }).isValid())
             .isTrue();
 
         unit
-            .bool(new EntityTest({ data: [ 1 ] }).isValid())
-            .isFalse();
+            .bool(new EntityTest({ data: [ 1 ] }, { strict: false }).isValid())
+            .isTrue();
 
     }
 
@@ -52,23 +52,23 @@ export class SuiteArray {
         }
 
         unit
-            .bool(new EntityTest({ data: [ 0 ] }).isValid())
+            .bool(new EntityTest({ data: [ 0 ] }, { strict: false }).isValid())
             .isFalse();
 
         unit
-            .bool(new EntityTest({ data: [ 0, 1, 2, 3, 4, 5 ] }).isValid())
+            .bool(new EntityTest({ data: [ 0, 1, 2, 3, 4, 5 ] }, { strict: false }).isValid())
             .isFalse();
 
         unit
-            .bool(new EntityTest({ data: [ 0, 1, 2 ] }).isValid())
+            .bool(new EntityTest({ data: [ 0, 1, 2 ] }, { strict: false }).isValid())
             .isTrue();
 
         unit
-            .bool(new EntityTest({ items: [ 0 ] }).isValid())
+            .bool(new EntityTest({ items: [ 0 ] }, { strict: false }).isValid())
             .isFalse();
 
         unit
-            .bool(new EntityTest({ items: [ 0, 1, 2 ] }).isValid())
+            .bool(new EntityTest({ items: [ 0, 1, 2 ] }, { strict: false }).isValid())
             .isTrue();
 
     }

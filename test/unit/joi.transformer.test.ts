@@ -64,7 +64,7 @@ export class SuiteJoi {
             name: string;
         }
 
-        const instance = new MyTest({ name: 'name' });
+        const instance = new MyTest({ name: 'name' }, { strict: false });
 
         unit
             .object(instance)
@@ -147,7 +147,7 @@ export class SuiteJoi {
 
         }
 
-        const instance1 = new User({ id: '23BC67F00A', name: 'Juneil', age: 28, birthday: null })
+        const instance1 = new User({ id: '23BC67F00A', name: 'Juneil', age: 28, birthday: null }, { strict: false })
 
         unit
             .bool(instance1.isValid())
@@ -156,7 +156,7 @@ export class SuiteJoi {
             .bool(instance1.isValid(Entity.Mode.CREATE))
             .isFalse();
 
-        const instance2 = new User({ name: 'Juneil', age: 28, password: 'eW8=', password_conf: 'eW8=', birthday: 28 });
+        const instance2 = new User({ name: 'Juneil', age: 28, password: 'eW8=', password_conf: 'eW8=', birthday: 28 }, { strict: false });
 
         unit
             .bool(instance2.isValid())
@@ -165,7 +165,7 @@ export class SuiteJoi {
             .bool(instance2.isValid(Entity.Mode.CREATE))
             .isTrue();
 
-        const instance3 = new User({ name: 'Juneil', age: 28, password: 'eW8=', password_conf: 'eQ8=' });
+        const instance3 = new User({ name: 'Juneil', age: 28, password: 'eW8=', password_conf: 'eQ8=' }, { strict: false });
 
         unit
             .bool(instance3.isValid(Entity.Mode.CREATE))
@@ -182,7 +182,7 @@ export class SuiteJoi {
             name: {[key: string]: string};
         }
 
-        const instance = new MyTest({ name: { test1: 'name1' }});
+        const instance = new MyTest({ name: { test1: 'name1' }}, { strict: false });
 
         unit
             .bool(instance.isValid())
@@ -194,7 +194,7 @@ export class SuiteJoi {
             name: {[key: string]: string};
         }
 
-        const instance2 = new MyTest2({ name: { test1: 'name1' }});
+        const instance2 = new MyTest2({ name: { test1: 'name1' }}, { strict: false });
 
         unit
             .bool(instance2.isValid())
@@ -218,13 +218,13 @@ export class SuiteJoi {
             }
         }
 
-        const instance = new MyTest({ name: { test1: 'name1' }});
+        const instance = new MyTest({ name: { test1: 'name1' }}, { strict: false });
 
         unit
             .bool(instance.isValid())
             .isTrue();
 
-        const instance2 = new MyTest({});
+        const instance2 = new MyTest({}, { strict: false });
 
         unit
             .bool(instance2.isValid())
