@@ -157,15 +157,6 @@ export function ObjectPattern(pattern: RegExp, schema: PropertyType): DecoratorF
 }
 
 /**
- * Decorator @Unknown()
- *
- * @returns DecoratorFunc
- */
-export function Unknown(): DecoratorFunc {
-    return insertRule({ key: decorators.KEY_UNKNOWN, value: null });
-}
-
-/**
  * Insert a new rule of a property
  * in the metadata of the Entity
  *
@@ -206,7 +197,7 @@ function getPropertiesWithInit(target: Function, propertyName: string): Property
         .concat(Reflect.getOwnMetadata(KEY_PROPS, target))
         .filter(_ => !!_);
     if (!props.find(_ => _.property === propertyName)) {
-        return props.concat(<PropertyMetadata>{ property: propertyName, rules: [] });
+        return props.concat(<PropertyMetadata>{ property: propertyName, rules: <PropertyRule[]>[] });
     }
     return props;
 }

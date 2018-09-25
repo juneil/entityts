@@ -28,15 +28,15 @@ export class SuiteSubEntity {
         }
 
         unit
-            .bool(new Entity1().isValid())
+            .bool(new Entity1(null, { strict: false }).isValid())
             .isTrue();
 
         unit
-            .bool(new Entity1({ sub: {} }).isValid())
+            .bool(new Entity1({ sub: {} }, { strict: false }).isValid())
             .isFalse();
 
         unit
-            .bool(new Entity1({ sub: { id: 'abc' } }).isValid())
+            .bool(new Entity1({ sub: { id: 'abc' } }, { strict: false }).isValid())
             .isTrue();
 
     }

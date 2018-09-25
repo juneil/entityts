@@ -159,14 +159,6 @@ Works with types: `String | Array | Buffer | TypeEnum`
 
 Add description metadata to the property
 
-#### Unknown
-
-```javascript
-@Unknown()
-```
-
-Allow unknown properties for object type
-
 ### TypeEnum
 
 - `Entity.Type.Any`: any
@@ -197,5 +189,24 @@ class Entity1 extends Entity {
             id: Joi.any.required()
         });
     }
+}
+```
+
+### Extends an other entity
+
+You can directly extend an entity
+
+```javascript
+class Entity1 extends Entity {
+    @Type(String)
+    id: string
+}
+
+class Entity2 extends EntityExtends(Entity1) {
+    @Type(Number)
+    id: number
+
+    @Type(Boolean)
+    flag: boolean
 }
 ```
