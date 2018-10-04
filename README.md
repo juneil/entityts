@@ -37,15 +37,22 @@ user2.isValid() // false
 
 ### Static methods
 
-- `schema(ModeEnum): Joi.Schema`
+- `schema(ModeEnum | EntityOptions): Joi.Schema`
     - Build and return the schema for a mode
 
 ### Instance methods
 
-- `schema(ModeEnum): Joi.Schema`
+- `schema(ModeEnum | EntityOptions): Joi.Schema`
     - Build and return the schema for a mode
 - `isValid(ModeEnum): boolean`
     - Based on the schema, valid the instance
+
+### EntityOptions
+
+`strict?: boolean` - Default: `true` - Used in the constructor of the entity to throw an error if validation failed
+`mode?: ModeEnum` - Default: `ModeEnum.READ` - Schema mode
+`array?: boolean` - Default: `false` - Build the schema as a list of the Entity
+`unknown?: boolean` - Default: `true` - Allow unknown keys in the payload
 
 ### Decorators
 
@@ -157,7 +164,14 @@ Works with types: `String | Array | Buffer | TypeEnum`
 @Description(string)
 ```
 
-Add description metadata to the property
+#### Regex
+
+```javascript
+@Regex(pattern)
+```
+
+Add regex validation for a string
+Works with type: `String`
 
 ### TypeEnum
 
@@ -167,6 +181,8 @@ Add description metadata to the property
 - `Entity.Type.Base64`: String in base64 format
 - `Entity.Type.IsoDate`: String in iso date format
 - `Entity.Type.URI`: String URI format
+- `Entity.Type.Email`: String Email format
+- `Entity.Type.Timestamp`: Date timestamp format
 
 ### ModeEnum
 

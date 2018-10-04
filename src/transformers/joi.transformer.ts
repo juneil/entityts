@@ -1,7 +1,7 @@
 import * as Joi from 'joi';
 import { PropertyMetadata, PropertyRule } from '../lib/decorators';
 import { ModeEnum, TypeEnum } from '../lib/enums';
-import { BaseEntity, EntityRef, EntityTransformer } from '../lib/entity';
+import { BaseEntity, EntityRef, EntityTransformer, EntityOptions } from '../lib/entity';
 import { decorators } from '../lib/symbols';
 
 interface PropertySchema {
@@ -12,14 +12,21 @@ interface PropertySchema {
 
 export { ObjectSchema as SchemaType } from 'joi';
 
-export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
+export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema | Joi.ArraySchema> {
 
     private objectIdRegex = /^[0-9a-fA-F]{24}$/;
 
-    build(source: PropertyMetadata[], mode: ModeEnum, more: Joi.ObjectSchema = Joi.object(), parent?: BaseEntity): Joi.ObjectSchema {
-        return !source ? undefined : more.concat(
-            this.reduceSchema(source.map(_ => this.propertyHandler(_, mode)), !!parent ? parent.schema(mode) : undefined)
+    build(source: PropertyMetadata[], opts: EntityOptions, more: Joi.ObjectSchema = Joi.object(),
+            parent?: BaseEntity): Joi.ObjectSchema | Joi.ArraySchema {
+        opts.unknown = opts.unknown === undefined || opts.unknown === null ? true : opts.unknown;
+        const result = !source ? undefined : more.concat(
+            this.reduceSchema(source.map(_ => this.propertyHandler(_, opts.mode, opts.unknown)),
+                opts.unknown, !!parent ? parent.schema(opts) : undefined)
         );
+        if (!!opts.array) {
+            return Joi.array().items(result);
+        }
+        return result;
     }
 
     isValid(data: BaseEntity, schema: Joi.ObjectSchema): boolean {
@@ -43,9 +50,9 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
      * @param  {PropertySchema[]} source
      * @returns Joi.ObjectSchema
      */
-    private reduceSchema(source: PropertySchema[], parent?: Joi.ObjectSchema): Joi.ObjectSchema {
+    private reduceSchema(source: PropertySchema[], unknown: boolean, parent?: Joi.ObjectSchema): Joi.ObjectSchema {
         const _s = !!parent ? parent : Joi.object();
-        return _s.keys(
+        const res = _s.keys(
             source
                 .map(_ => ({
                     property: _.property,
@@ -55,7 +62,8 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
                     acc[cur.property] = cur.schema;
                     return acc;
                 }, {})
-        ).unknown();
+        );
+        return !!unknown ? res.unknown() : res;
     }
 
     /**
@@ -67,11 +75,11 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
      * @param  {ModeEnum} mode
      * @returns PropertySchema
      */
-    private propertyHandler(source: PropertyMetadata, mode: ModeEnum): PropertySchema {
+    private propertyHandler(source: PropertyMetadata, mode: ModeEnum, unknown: boolean): PropertySchema {
         const base = source
             .rules
             .filter(_ => _.key === decorators.KEY_TYPE || _.key === decorators.KEY_ARRAY || _.key === decorators.KEY_OBJECT_PATTERN)
-            .map(_ => this.ruleHandler(_, mode))
+            .map(_ => this.ruleHandler(_, mode, unknown))
             .shift() || Joi.any();
         return {
             property: source.property,
@@ -79,7 +87,7 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
             schemas: source
                 .rules
                 .filter(_ => (_.key !== decorators.KEY_TYPE && _.key !== decorators.KEY_ARRAY && _.key !== decorators.KEY_OBJECT_PATTERN))
-                .map(_ => this.ruleHandler(_, mode, base))
+                .map(_ => this.ruleHandler(_, mode, unknown, base))
                 .filter(_ => !!_)
         }
     }
@@ -94,12 +102,12 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
      * @param  {Joi.Schema} base
      * @returns Joi.Schema
      */
-    private ruleHandler(rule: PropertyRule, mode: ModeEnum, base?: Joi.Schema): Joi.Schema {
+    private ruleHandler(rule: PropertyRule, mode: ModeEnum, unknown: boolean, base?: Joi.Schema): Joi.Schema {
         switch (rule.key) {
             case decorators.KEY_TYPE:
-                return this.typeMapper(rule, mode);
+                return this.typeMapper(rule, mode, unknown);
             case decorators.KEY_ARRAY:
-                return Joi.array().items(this.typeMapper(rule, mode));
+                return Joi.array().items(this.typeMapper(rule, mode, unknown));
             case decorators.KEY_REQUIRED:
                 return this.requireMapper(rule, mode);
             case decorators.KEY_STRIP:
@@ -119,7 +127,9 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
             case decorators.KEY_LENGTH:
                 return this.lengthMapper(rule, base);
             case decorators.KEY_OBJECT_PATTERN:
-                return this.objectPatternMapper(rule);
+                return this.objectPatternMapper(rule, unknown);
+            case decorators.KEY_REGEX:
+                return this.regexMapper(rule);
             /* istanbul ignore next */
             default:
                 return Joi.any();
@@ -132,7 +142,7 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
      * @param  {PropertyRule} rule
      * @returns Joi.Schema
      */
-    private typeMapper(rule: PropertyRule, mode: ModeEnum): Joi.Schema {
+    private typeMapper(rule: PropertyRule, mode: ModeEnum, unknown: boolean): Joi.Schema {
         switch (rule.value) {
             case String:
                 return Joi.string();
@@ -141,7 +151,7 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
             case Boolean:
                 return Joi.boolean();
             case Object:
-                return Joi.object().unknown();
+                return unknown ? Joi.object().unknown() : Joi.object();
             case Buffer:
                 return Joi.binary();
             case Date:
@@ -160,6 +170,10 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
                 return Joi.string().ip();
             case TypeEnum.URI:
                 return Joi.string().uri();
+            case TypeEnum.Email:
+                return Joi.string().email();
+            case TypeEnum.Timestamp:
+                return Joi.date().timestamp();
             /* istanbul ignore next */
             default:
                 if (typeof rule.value === 'function' && new rule.value(null, { strict: false }) instanceof BaseEntity) {
@@ -317,13 +331,28 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema> {
      * @param  {PropertyRule} rule
      * @returns Joi.Schema
      */
-    private objectPatternMapper(rule: PropertyRule): Joi.Schema {
+    private objectPatternMapper(rule: PropertyRule, unknown: boolean): Joi.Schema {
         if (!rule.value.schema) {
             throw new Error('Wrong schema provided');
         } else if (rule.value.schema instanceof BaseEntity) {
             return Joi.object().pattern(rule.value.pattern, rule.value.schema.schema());
         } else {
-            return Joi.object().pattern(rule.value.pattern, this.typeMapper({ key: null, value: rule.value.schema }, ModeEnum.READ));
+            return Joi.object().pattern(rule.value.pattern,
+                this.typeMapper({ key: null, value: rule.value.schema }, ModeEnum.READ, unknown));
+        }
+    }
+
+    /**
+     * Regex mapping
+     *
+     * @param  {PropertyRule} rule
+     * @returns Joi.Schema
+     */
+    private regexMapper(rule: PropertyRule): Joi.Schema {
+        if (!(rule.value instanceof RegExp)) {
+            throw new Error('Wrong regex provided');
+        } else {
+            return Joi.string().regex(rule.value);
         }
     }
 }

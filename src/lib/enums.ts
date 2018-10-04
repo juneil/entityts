@@ -12,5 +12,7 @@ export enum TypeEnum {
     IsoDate         = <any>Symbol('type_isodate'),
     Integer         = <any>Symbol('type_integer'),
     IP              = <any>Symbol('type_ip'),
-    URI             = <any>Symbol('type_uri')
+    URI             = <any>Symbol('type_uri'),
+    Email           = <any>Symbol('type_email'),
+    Timestamp       = <any>Symbol('type_timestamp')
 }

@@ -65,13 +65,13 @@ export class SuiteEntity {
             name: string;
         }
 
-        const instance = new MyTest();
+        const instance = new MyTest(null, { strict: false });
 
         unit
             .object(instance)
-            .isInstanceOf(BaseEntity)
-            .hasProperty('id', undefined)
-            .hasProperty('name', undefined)
+            .isInstanceOf(BaseEntity);
+        unit.value(instance.id).is(undefined);
+        unit.value(instance.name).is(undefined);
 
     }
 

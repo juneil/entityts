@@ -37,5 +37,8 @@ export const decorators = {
     KEY_LENGTH      : Symbol('key_length'),
 
     // Key of @ObjectPattern()
-    KEY_OBJECT_PATTERN  : Symbol('key_object_pattern')
+    KEY_OBJECT_PATTERN  : Symbol('key_object_pattern'),
+
+    // Key of @Regex()
+    KEY_REGEX       : Symbol('key_regex')
 }

@@ -6,10 +6,12 @@ import { JoiTransformer } from '../transformers/joi.transformer';
 export interface EntityOptions {
     strict?: boolean;
     mode?: ModeEnum;
+    array?: boolean;
+    unknown?: boolean;
 }
 
 export interface EntityTransformer<T> {
-    build: (source: PropertyMetadata[], mode: ModeEnum, more?: T, parent?: BaseEntity) => T;
+    build: (source: PropertyMetadata[], opts: EntityOptions, more?: T, parent?: BaseEntity) => T;
     isValid: (value: BaseEntity, schema: T) => boolean;
     validate: (value: BaseEntity, schema: T) => { value: any, error: Error };
 }
@@ -36,13 +38,18 @@ export class BaseEntity {
      * @param  {ModeEnum=ModeEnum.READ} mode
      * @returns T
      */
-    static schema<T>(mode: ModeEnum = ModeEnum.READ): T {
+    static schema<T>(opts?: ModeEnum | EntityOptions): T {
+        if (Object.values(ModeEnum).includes(opts)) {
+            opts = <EntityOptions>{ mode: opts };
+        } else if (!opts) {
+            opts = <EntityOptions>{ mode: ModeEnum.READ };
+        }
         if (!(this.transformers && this.transformers.length > 0)) {
             return;
         }
         return this
             .transformers[0]
-            .build(Reflect.getMetadata(KEY_PROPS, this), mode, this.more(), this.parent);
+            .build(Reflect.getMetadata(KEY_PROPS, this), <EntityOptions>opts, this.more(), this.parent);
     }
 
     /**
@@ -65,17 +72,17 @@ export class BaseEntity {
     constructor(payload = {}, options?: EntityOptions) {
         options = options || { strict: true, mode: ModeEnum.READ };
         payload = payload || {};
+        options.unknown = false;
         const result = this
             .constructor
             ['transformers'][0]
-            .validate(payload, this.constructor['schema'](options.mode));
+            .validate(payload, this.constructor['schema'](options));
         if (options.strict !== false && !!result.error) {
             throw result.error;
         }
         []
-            .concat(Reflect.getOwnMetadata(KEY_PROPS, this.constructor))
-            .filter(_ => !!_)
-            .forEach((_: PropertyMetadata) => Reflect.set(this, _.property, result.value[_.property] || undefined))
+            .concat(Object.keys(result.value))
+            .forEach((_: string) => Reflect.set(this, _, result.value[_] || undefined))
     }
 
     /**
@@ -96,8 +103,8 @@ export class BaseEntity {
      *
      * @param  {ModeEnum} mode
      */
-    schema<T>(mode?: ModeEnum): T {
-        return this.constructor['schema'](mode);
+    schema<T>(opts?: ModeEnum | EntityOptions): T {
+        return this.constructor['schema'](opts);
     }
 }
 
@@ -120,9 +127,12 @@ export const Entity = EntityTo(JoiTransformer);
 
 export function EntityExtends(parent: any) {
     const _p = Reflect.construct(parent, [{}, { strict: false }]);
+    if (!(_p instanceof BaseEntity)) {
+        throw new Error('You need to extends another Entity');
+    }
     return class extends BaseEntity {
         static transformers = [new JoiTransformer()];
-        static parent = (_p instanceof BaseEntity) ? parent : undefined;
+        static parent = parent;
         static more() {};
     }
 }

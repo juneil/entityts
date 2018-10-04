@@ -157,6 +157,16 @@ export function ObjectPattern(pattern: RegExp, schema: PropertyType): DecoratorF
 }
 
 /**
+ * Decorator @Regex()
+ *
+ * @param  {RegExp} pattern
+ * @returns DecoratorFunc
+ */
+export function Regex(pattern: RegExp): DecoratorFunc {
+    return insertRule({ key: decorators.KEY_REGEX, value: pattern });
+}
+
+/**
  * Insert a new rule of a property
  * in the metadata of the Entity
  *

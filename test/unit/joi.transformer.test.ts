@@ -4,6 +4,7 @@ import * as Joi from 'joi';
 import { BaseEntity } from '../../src/lib/entity';
 import { Entity, EntityTo, JoiTransformer,
     Type, Required, Strip, Valid, Invalid, Allow, Description, Min, Max, Length, ObjectPattern } from '../../src';
+import { Regex } from '../../src/lib/decorators';
 
 @suite('JoiTransformer')
 export class SuiteJoi {
@@ -229,6 +230,79 @@ export class SuiteJoi {
         unit
             .bool(instance2.isValid())
             .isFalse();
+
+    }
+
+    @test('Regex feature')
+    test7() {
+
+        class MyTest extends EntityTo(JoiTransformer) {
+
+            @Regex(/\w+/)
+            @Type(String)
+            name: string;
+
+        }
+
+        const instance = new MyTest({ name: 'test' }, { strict: false });
+
+        unit
+            .bool(instance.isValid())
+            .isTrue();
+
+        const instance2 = new MyTest({ name: '$@' }, { strict: false });
+
+        unit
+            .bool(instance2.isValid())
+            .isFalse();
+
+    }
+
+    @test('Schema to array')
+    test8() {
+
+        class MyTest extends EntityTo(JoiTransformer) {
+            @Type(String)
+            name: string;
+        }
+
+        const schema = MyTest.schema();
+
+        unit
+            .bool(!Joi.validate({ name: 'hello' }, schema).error)
+            .isTrue();
+
+        const schemaArr = MyTest.schema({ array: true });
+
+        unit
+            .bool(!!Joi.validate({ name: 'hello' }, schemaArr).error)
+            .isTrue();
+
+        unit
+            .bool(!Joi.validate([{ name: 'hello' }], schemaArr).error)
+            .isTrue();
+
+    }
+
+    @test('Schema to unknown option')
+    test9() {
+
+        class MyTest extends EntityTo(JoiTransformer) {
+            @Type(String)
+            name: string;
+        }
+
+        const schema = MyTest.schema();
+
+        unit
+            .bool(!Joi.validate({ name: 'hello', test: true }, schema).error)
+            .isTrue();
+
+        const schema2 = MyTest.schema({ unknown: false });
+
+        unit
+            .bool(!!Joi.validate({ name: 'hello', test: true }, schema2).error)
+            .isTrue();
 
     }
 
