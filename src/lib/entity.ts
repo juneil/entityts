@@ -82,6 +82,7 @@ export class BaseEntity {
         }
         []
             .concat(Object.keys(result.value))
+            .filter(_ => result.value[_] !== undefined)
             .forEach((_: string) => Reflect.set(this, _, result.value[_]))
     }
 

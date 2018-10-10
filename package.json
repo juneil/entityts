@@ -1,6 +1,6 @@
 {
   "name": "@juneil/entityts",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "EntityTS - Typescript library for entities, create entities for validation",
   "main": "index.js",
   "scripts": {
