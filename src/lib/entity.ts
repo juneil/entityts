@@ -82,7 +82,7 @@ export class BaseEntity {
         }
         []
             .concat(Object.keys(result.value))
-            .forEach((_: string) => Reflect.set(this, _, result.value[_] || undefined))
+            .forEach((_: string) => Reflect.set(this, _, result.value[_]))
     }
 
     /**

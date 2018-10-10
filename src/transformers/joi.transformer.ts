@@ -32,14 +32,14 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema | Joi.
     isValid(data: BaseEntity, schema: Joi.ObjectSchema): boolean {
         return !!data && !Joi.validate(data, schema, {
             stripUnknown: true,
-            convert: true
+            convert: false
         }).error;
     }
 
     validate(data: any, schema: Joi.ObjectSchema) {
         return Joi.validate(data, schema, {
             stripUnknown: true,
-            convert: true
+            convert: false
         });
     }
 
