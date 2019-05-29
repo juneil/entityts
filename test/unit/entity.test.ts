@@ -3,7 +3,7 @@ import * as unit from 'unit.js';
 
 import { BaseEntity, EntityRef } from '../../src/lib/entity';
 import { Entity, EntityTo, Type, JoiTransformer } from '../../src';
-
+import * as Joi from 'joi';
 @suite('Entity')
 export class SuiteEntity {
 
@@ -159,20 +159,20 @@ export class SuiteEntity {
 
     }
 
-    @test('Entity - Equality')
-    test9() {
+    // @test('Entity - Equality')
+    // test9() {
 
-        class MyTest9 extends Entity {
+    //     class MyTest9 extends Entity {
 
-            @Type(String)
-            id: string;
+    //         @Type(String)
+    //         id: string;
 
-        }
+    //     }
 
-        const instance = new MyTest9();
-        unit
-            .object(MyTest9.schema())
-            .is(instance.schema());
+    //     const instance = new MyTest9();
+    //     unit
+    //         .object(MyTest9.schema())
+    //         .is(instance.schema());
 
-    }
+    // }
 }

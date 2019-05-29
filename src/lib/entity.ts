@@ -52,6 +52,12 @@ export class BaseEntity {
             .build(Reflect.getMetadata(KEY_PROPS, this), <EntityOptions>opts, this.more(), this.parent);
     }
 
+    static isValid(value: any, mode: ModeEnum = ModeEnum.READ): boolean {
+        return this
+            .transformers[0]
+            .isValid(value, this.schema(mode));
+    }
+
     /**
      * Do a reference to another property
      *
@@ -92,21 +98,21 @@ export class BaseEntity {
      * @param  {ModeEnum=ModeEnum.READ} mode
      * @returns boolean
      */
-    isValid(mode: ModeEnum = ModeEnum.READ): boolean {
-        return this
-            .constructor
-            ['transformers'][0]
-            .isValid(this, this.constructor['schema'](mode));
-    }
+    // isValid(mode: ModeEnum = ModeEnum.READ): boolean {
+    //     return this
+    //         .constructor
+    //         ['transformers'][0]
+    //         .isValid(this, this.constructor['schema'](mode));
+    // }
 
     /**
      * Get schema
      *
      * @param  {ModeEnum} mode
      */
-    schema<T>(opts?: ModeEnum | EntityOptions): T {
-        return this.constructor['schema'](opts);
-    }
+    // schema<T>(opts?: ModeEnum | EntityOptions): T {
+    //     return this.constructor['schema'](opts);
+    // }
 }
 
 export type Constructor<T> = new(...args: any[]) => T;

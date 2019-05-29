@@ -21,7 +21,7 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema | Joi.
         opts.unknown = opts.unknown === undefined || opts.unknown === null ? true : opts.unknown;
         const result = !source ? undefined : more.concat(
             this.reduceSchema(source.map(_ => this.propertyHandler(_, opts.mode, opts.unknown)),
-                opts.unknown, !!parent ? parent.schema(opts) : undefined)
+                opts.unknown, !!parent ? parent['schema'](opts) : undefined)
         );
         if (!!opts.array) {
             return Joi.array().items(result);
@@ -177,7 +177,7 @@ export class JoiTransformer implements EntityTransformer<Joi.ObjectSchema | Joi.
             /* istanbul ignore next */
             default:
                 if (typeof rule.value === 'function' && new rule.value(null, { strict: false }) instanceof BaseEntity) {
-                    return (<BaseEntity>rule.value).schema(mode);
+                    return (<BaseEntity>rule.value)['schema'](mode);
                 }
                 return Joi.any();
         }

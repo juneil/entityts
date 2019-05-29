@@ -1,7 +1,6 @@
 import { suite, test } from 'mocha-typescript';
 import * as unit from 'unit.js';
-
-import { Entity, Required, Type } from '../../src';
+import { Entity, Required, Type, Array } from '../../src';
 
 @suite('Sub Entity')
 export class SuiteSubEntity {
@@ -12,9 +11,8 @@ export class SuiteSubEntity {
         class Entity2 extends Entity {
 
             @Required()
-            @Type(String)
-            id: string
-
+            @Type(Boolean)
+            foo: boolean
         }
 
         class Entity1 extends Entity {
@@ -22,22 +20,33 @@ export class SuiteSubEntity {
             @Type(String)
             id: string
 
+            @Array(Boolean)
+            b: boolean[];
+
             @Type(Entity2)
-            sub: Entity2
+            sub: Entity2;
 
         }
 
         unit
-            .bool(new Entity1(null, { strict: false }).isValid())
+            .bool(Entity1.isValid(new Entity1(null, { strict: false })))
             .isTrue();
 
         unit
-            .bool(new Entity1({ sub: {} }, { strict: false }).isValid())
+            .bool(Entity1.isValid(new Entity1({ sub: {} }, { strict: false })))
             .isFalse();
 
         unit
-            .bool(new Entity1({ sub: { id: 'abc' } }, { strict: false }).isValid())
+            .bool(Entity1.isValid(new Entity1({ sub: { foo: true } }, { strict: false })))
             .isTrue();
+
+        unit
+            .bool(Entity1.isValid(new Entity1({ sub: { foo: 'true' } }, { strict: false })))
+            .isFalse();
+
+        unit
+            .bool(Entity1.isValid(new Entity1({ sub: { b: [{}] } }, { strict: false })))
+            .isFalse();
 
     }
 }

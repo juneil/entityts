@@ -34,7 +34,7 @@
       "trace"
     ],
     "no-constant-condition": true,
-    "no-unused-variable": true,
+    "no-unused-variable": false,
     "no-construct": true,
     "no-debugger": true,
     "no-duplicate-variable": true,

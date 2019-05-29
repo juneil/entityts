@@ -73,7 +73,7 @@ export class SuiteJoi {
             .hasProperty('name', 'name');
 
         unit
-            .bool(instance.isValid())
+            .bool(MyTest.isValid(instance))
             .isFalse()
 
     }
@@ -151,25 +151,25 @@ export class SuiteJoi {
         const instance1 = new User({ id: '23BC67F00A', name: 'Juneil', age: 28, birthday: null }, { strict: false })
 
         unit
-            .bool(instance1.isValid())
+            .bool(User.isValid(instance1))
             .isTrue();
         unit
-            .bool(instance1.isValid(Entity.Mode.CREATE))
+            .bool(User.isValid(instance1, Entity.Mode.CREATE))
             .isFalse();
 
         const instance2 = new User({ name: 'Juneil', age: 28, password: 'eW8=', password_conf: 'eW8=', birthday: 28 }, { strict: false });
 
         unit
-            .bool(instance2.isValid())
+            .bool(User.isValid(instance2))
             .isFalse();
         unit
-            .bool(instance2.isValid(Entity.Mode.CREATE))
+            .bool(User.isValid(instance2, Entity.Mode.CREATE))
             .isTrue();
 
         const instance3 = new User({ name: 'Juneil', age: 28, password: 'eW8=', password_conf: 'eQ8=' }, { strict: false });
 
         unit
-            .bool(instance3.isValid(Entity.Mode.CREATE))
+            .bool(User.isValid(instance3, Entity.Mode.CREATE))
             .isFalse();
 
     }
@@ -186,7 +186,7 @@ export class SuiteJoi {
         const instance = new MyTest({ name: { test1: 'name1' }}, { strict: false });
 
         unit
-            .bool(instance.isValid())
+            .bool(MyTest.isValid(instance))
             .isTrue()
 
         class MyTest2 extends EntityTo(JoiTransformer) {
@@ -198,7 +198,7 @@ export class SuiteJoi {
         const instance2 = new MyTest2({ name: { test1: 'name1' }}, { strict: false });
 
         unit
-            .bool(instance2.isValid())
+            .bool(MyTest2.isValid(instance2))
             .isFalse()
 
     }
@@ -222,13 +222,13 @@ export class SuiteJoi {
         const instance = new MyTest({ name: { test1: 'name1' }}, { strict: false });
 
         unit
-            .bool(instance.isValid())
+            .bool(MyTest.isValid(instance))
             .isTrue();
 
         const instance2 = new MyTest({}, { strict: false });
 
         unit
-            .bool(instance2.isValid())
+            .bool(MyTest.isValid(instance2))
             .isFalse();
 
     }
@@ -247,13 +247,13 @@ export class SuiteJoi {
         const instance = new MyTest({ name: 'test' }, { strict: false });
 
         unit
-            .bool(instance.isValid())
+            .bool(MyTest.isValid(instance))
             .isTrue();
 
         const instance2 = new MyTest({ name: '$@' }, { strict: false });
 
         unit
-            .bool(instance2.isValid())
+            .bool(MyTest.isValid(instance2))
             .isFalse();
 
     }

@@ -18,20 +18,24 @@ export class SuiteArray {
         }
 
         unit
-            .bool(new EntityTest({}, { strict: false }).isValid())
+            .bool(EntityTest.isValid(new EntityTest({}, { strict: false })))
             .isFalse();
 
         unit
-            .bool(new EntityTest({ data: 'data' }, { strict: false }).isValid())
+            .bool(EntityTest.isValid(new EntityTest({ data: 'data' }, { strict: false })))
             .isFalse();
 
         unit
-            .bool(new EntityTest({ data: [] }, { strict: false }).isValid())
+            .bool(EntityTest.isValid(new EntityTest({ data: [] }, { strict: false })))
             .isTrue();
 
         unit
-            .bool(new EntityTest({ data: [ 1 ] }, { strict: false }).isValid())
+            .bool(EntityTest.isValid(new EntityTest({ data: ['test'] }, { strict: false })))
             .isTrue();
+
+        unit
+            .bool(EntityTest.isValid(new EntityTest({ data: [ 1 ] }, { strict: false })))
+            .isFalse();
 
     }
 
@@ -52,23 +56,23 @@ export class SuiteArray {
         }
 
         unit
-            .bool(new EntityTest({ data: [ 0 ] }, { strict: false }).isValid())
+            .bool(EntityTest.isValid(new EntityTest({ data: [ 0 ] }, { strict: false })))
             .isFalse();
 
         unit
-            .bool(new EntityTest({ data: [ 0, 1, 2, 3, 4, 5 ] }, { strict: false }).isValid())
+            .bool(EntityTest.isValid(new EntityTest({ data: [ 0, 1, 2, 3, 4, 5 ] }, { strict: false })))
             .isFalse();
 
         unit
-            .bool(new EntityTest({ data: [ 0, 1, 2 ] }, { strict: false }).isValid())
+            .bool(EntityTest.isValid(new EntityTest({ data: [ 0, 1, 2 ] }, { strict: false })))
             .isTrue();
 
         unit
-            .bool(new EntityTest({ items: [ 0 ] }, { strict: false }).isValid())
+            .bool(EntityTest.isValid(new EntityTest({ items: [ 0 ] }, { strict: false })))
             .isFalse();
 
         unit
-            .bool(new EntityTest({ items: [ 0, 1, 2 ] }, { strict: false }).isValid())
+            .bool(EntityTest.isValid(new EntityTest({ items: [ 0, 1, 2 ] }, { strict: false })))
             .isTrue();
 
     }

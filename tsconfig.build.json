@@ -2,6 +2,7 @@
     "extends": "./tsconfig.json",
     "compilerOptions": {
         "declaration": true,
+        "noUnusedLocals": true,
         "outDir": "./dist",
         "rootDir": "./src",
         "types": [
